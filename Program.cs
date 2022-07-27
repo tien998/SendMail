@@ -56,6 +56,15 @@ app.UseEndpoints(enpoints =>
         mailContents.Body = "<i>Send mail success</i>\n testing <br>    ! xuống dòng ";
         try
         {
+            
+            await context.Response.WriteAsJsonAsync(mailSettingsOpts.ReplyTo);
+        }
+        catch (System.Exception e)
+        {
+            Console.WriteLine(e.Message + " error here!");
+        }
+        try
+        {
             mailContents.Bcc!.Append<MailboxAddress>(new MailboxAddress("Trẻ trâu", "rboy18304@gmail.com"));
             // mailContents.ReplyTo!.Append<MailboxAddress>(new MailboxAddress("Cty TNHH MTV", "fawals98@gmail.com"))
             //     .Append<MailboxAddress>(new MailboxAddress("Trẻ trâu", "rboy18304@gmail.com"));
@@ -65,20 +74,8 @@ app.UseEndpoints(enpoints =>
             await context.Response.WriteAsync(e.Message);
         }
         string rs = await mailService!.SendMail(mailContents!);
-        await context.Response.WriteAsync(rs);
-        try
-        {
-            // var fakeMime = mailService._message!.ReplyTo.Count;
-            mailSettingsOpts.ReplyTo!.Add("a","b");
-            KeyValuePair<string,string> Mime = mailSettingsOpts.ReplyTo.First();
-            // var name1 = mailSettingsOpts.ReplyTo[0];
-            // await context.Response.WriteAsync(fakeMime.ToString());
-            await context.Response.WriteAsync(Mime.Value);
-        }
-        catch (System.Exception e)
-        {
-            Console.WriteLine(e.Message + " error here!");
-        }
+        await context.Response.WriteAsync("\n\n" + rs);
+        
     });
 });
 
